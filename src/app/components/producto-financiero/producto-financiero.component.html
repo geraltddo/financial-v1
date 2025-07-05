@@ -1,0 +1,79 @@
+<div class="container background-gris">
+    <div class="row-flex-center" style="height: 15vh;">
+
+    </div>
+    
+    <div class="text-center">
+        <div class="row-flex-between col-75 div-spacing center-content">
+            <input type="text" placeholder="Search.." [(ngModel)]="searchTerm" (keyup)="onSearch($event)">
+            <button class="btn button-secondary" (click)="openModalAgregarProducto()">Agregar</button>
+        </div>
+        <div class="col-75 text-center background-white div-spacing center-content">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="text-center">Logo</th>
+                        <th class="text-left">Nombre del producto</th>
+                        <th class="text-left">Descripción</th>
+                        <th class="text-center">Fecha de liberación &nbsp;<i class="info-icon"></i></th>
+                        <th class="text-center">Fecha de reestructuración &nbsp;<i class="info-icon"></i></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let producto of productosFiltrados">
+                        <td class="text-center">
+                            <img src="{{producto.logo}}" class="img-logo" onerror="this.style.display='none'">
+                            <i class="img-error-logo"></i>
+                        </td>
+                        <td class="text-left">{{producto.name}}</td>
+                        <td class="text-left">{{producto.description}}</td>
+                        <td class="text-center">{{producto.date_release | date: 'dd/MM/yyyy'}}</td>
+                        <td class="text-center">{{producto.date_revision | date: 'dd/MM/yyyy'}}</td>
+                        <td class="text-center"> 
+                            <div class='dropdown dropdown-{{producto.id}}'>
+                                <div class='title title-{{producto.id}} pointerCursor' (click)="cargaProductoActual(producto)">Seleccione una opción <i class="fa fa-angle-right"></i></div>
+                                <div class='menu-{{producto.id}} menu pointerCursor hide text-right' id="{{producto.id}}">
+                                    <div class='option' id='editar' (click)="modal.openModalEditar(producto)">Editar</div>
+                                    <div class='option' id='eliminar' (click)="openModal(producto)">Eliminar</div>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td class="text-center">
+                            <span>{{productosFiltrados.length}} resultados</span>
+                        </td>
+                        <td colspan="4"></td>
+                        <td class="text-center">
+                            <select (change)="filtrarProductos($event)">
+                                <option value="0">Seleccione</option>
+                                <option value="5">5</option>
+                                <option value="10">10</option>
+                                <option value="20">20</option>
+                            </select>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <div id='modalEliminar' class="modal">
+        <div class="modal-content">
+            <h2>Está seguro de eliminar el producto {{productoEliminar!.name}}</h2>
+            <hr class="margin-20">
+            <div class="row-flex-between margin-10 padding-20">
+                <button type="button" class="btn button-box" (click)="closeModal()">Cancelar</button>
+                <button type="submit" class="btn button-secondary" (click)="eliminarProducto(productoEliminar)" >Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<app-toast #toast></app-toast>
+<app-agregar-producto (formSubmitted)="guardarProducto($event.producto,$event.accion)" #modal></app-agregar-producto>

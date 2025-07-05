@@ -1,0 +1,69 @@
+<div id='modal' class="modal">
+  <div class="modal-content">
+    <span class="close" (click)="closeModal()">&times;</span>
+    <h2>Formulario de Registro</h2>
+    <form [formGroup]="productoForm" (ngSubmit)="onSubmit()">
+      <div class="row-flex">
+        <div class="col-50 text-left">
+          <label for="id">ID</label>
+          <input type="text" id="id" formControlName="id" minlength="3" maxlength="10" required [ngClass]="!isControlValid('id') ? 'error-input' : ''" #id>
+          <div *ngIf="!isControlValid('id')">
+            <div *ngIf="productoForm.get('id')?.errors?.['required']" class="error">{{inputRequeridos}}</div>
+            <div *ngIf="productoForm.get('id')?.value?.length < 3 || productoForm.get('id')?.value.length > 10" class="error">ID inválido</div>
+          </div>
+        </div>
+        <div class="col-50 text-left">
+          <label for="tarjetaCredito">Nombre</label>
+          <input type="text" id="tarjetaCredito" minlength="5" maxlength="100" formControlName="tarjetaCredito" required [ngClass]="!isControlValid('tarjetaCredito') ? 'error-input' : ''">
+          <div *ngIf="!isControlValid('tarjetaCredito')">
+            <div *ngIf="productoForm.get('tarjetaCredito')!.errors?.['required']" class="error">{{inputRequeridos}}</div>
+            <div *ngIf="productoForm.get('tarjetaCredito')?.value?.length < 5 || productoForm.get('tarjetaCredito')?.value.length > 100" class="error">Nombre inválido</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row-flex">
+        <div class="col-50 text-left">
+          <label for="descripcion">Descripción</label>
+          <input type="text" id="descripcion" minlength="10" maxlength="100" formControlName="descripcion" required [ngClass]="!isControlValid('descripcion') ? 'error-input' : ''">
+          <div *ngIf="!isControlValid('descripcion')">
+            <div *ngIf="productoForm.get('descripcion')?.errors?.['required']" class="error">{{inputRequeridos}}</div>
+            <div *ngIf="productoForm.get('descripcion')?.value?.length < 10 || productoForm.get('descripcion')?.value.length > 100" class="error">Descripción inválido</div>
+          </div>
+        </div>        
+        <div class="col-50 text-left">
+          <label for="logo">Logo</label>
+          <input type="text" id="logo" formControlName="logo" required [ngClass]="!isControlValid('logo') ? 'error-input' : ''">
+          <div *ngIf="!isControlValid('logo')">
+            <div *ngIf="productoForm.get('logo')?.errors?.['required']" class="error">{{inputRequeridos}}</div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row-flex">
+        <div class="col-50 text-left">
+          <label for="fechaLiberacion">Fecha Liberación</label>
+          <input type="date" id="fechaLiberacion" formControlName="fechaLiberacion" required [ngClass]="!isControlValid('fechaLiberacion') || productoForm.get('fechaLiberacion')?.value < fechaActual ? 'error-input' : ''" (change)="onDateChange()">
+          <div *ngIf="!isControlValid('fechaLiberacion') || productoForm.get('fechaLiberacion')?.value < fechaActual">
+            <div *ngIf="productoForm.get('fechaLiberacion')!.errors?.['required']" class="error">{{inputRequeridos}}</div>
+            <div *ngIf="productoForm.get('fechaLiberacion')?.value < fechaActual" class="error">La fecha de liberación no puede ser menor a la fecha actual</div>
+          </div>
+        </div>
+        <div class="col-50 text-left">
+          <label for="fechaRevision">Fecha Revisión</label>
+          <input type="text" id="fechaRevision" formControlName="fechaRevision">
+          <div *ngIf="productoForm.get('fechaRevision')!.invalid && (productoForm.get('fechaRevision')!.dirty || productoForm.get('fechaRevision')!.touched)">
+            <div *ngIf="productoForm.get('fechaRevision')!.errors?.['required']" class="error">La fecha de revisión es requerida.</div>
+          </div>
+        </div>
+      </div>
+      <div class="row-flex margin-10" *ngIf="existeId">
+        <div class="error">El ID ya existe</div>
+      </div>
+      <div class="row-flex-between margin-20 padding-20">
+        <button type="button" class="btn button-box" (click)="resetForm()">Reiniciar</button>
+        <button type="submit" [class]=" productoForm.valid ? 'btn button-secondary' : 'btn button-secondary disabled'" [disabled]="productoForm.invalid">Enviar</button>
+      </div>
+    </form>
+  </div>
+</div>
